@@ -221,7 +221,7 @@ public class FlowHandler {
                 helper.setFrom(from);
                 helper.setTo(user.getEmail());
                 helper.setSubject("Order Confirmation");
-                helper.setText("<h1 style=\"color:dodgerblue;font-family:sans-serif;font-size:40px;\">Confirm Order</h1>"+
+                helper.setText("<h1 style=\"color:dodgerblue;font-family:sans-serif;font-size:50px;\">Confirm Order</h1>"+
                 		"  <body class=\"main\">\r\n"+
                 		"<link rel=\"stylesheet\" href=\"https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css\">\r\n" + 
                 		"  <script src=\"https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js\"></script>\r\n" + 
