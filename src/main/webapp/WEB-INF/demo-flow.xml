@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<flow xmlns="http://www.springframework.org/schema/webflow"
+      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.springframework.org/schema/webflow http://www.springframework.org/schema/webflow/spring-webflow-2.0.xsd">
+     <var name="orders" class="com.dtproject.model.Orders"></var>
+     
+     <on-start>
+    	<evaluate expression="flowHandler.initOrders()"></evaluate>
+    </on-start>
+    
+    <action-state id="first">
+    	<evaluate expression="flowHandler.addToCart(requestParameters.pid,requestParameters.quantity,orders)" result="orders"></evaluate>
+    	<transition to="checkShippingAddress"></transition>
+    </action-state>
+    
+    <action-state id="checkShippingAddress">
+    	<evaluate expression="flowHandler.checkShippingAddress()"></evaluate>
+    	<transition on="empty" to="addNewShippingAddress"></transition>
+    	<transition on="available" to="attachAddress"></transition>
+    </action-state>
+    
+    <action-state id="attachAddress">
+    	<evaluate expression="flowHandler.attachAddress(orders)" result="orders"></evaluate>
+    	<transition to="chooseAddress"></transition>
+    </action-state>
+    
+    <view-state id="addNewShippingAddress" view="shippingAddress" model="orders">
+    	<transition on="success" to="setAddress"></transition>
+    </view-state>
+    
+    <action-state id="setAddress">
+    	<evaluate expression="flowHandler.setNewAddress(orders,flowRequestContext)" result="orders"></evaluate>
+    	<transition to="chooseAddress"></transition>
+    </action-state>
+    
+    <view-state id="chooseAddress" view="productShippingAddress" model="orders">
+    	<transition on="setPayment" to="setSelectedAddress"></transition>
+    </view-state>
+    
+    <action-state id="setSelectedAddress">
+    	<evaluate expression="flowHandler.setSelectedAddress(orders,flowRequestContext)" result="orders"></evaluate>
+    	<transition to="payment"></transition>
+    </action-state>
+    
+    <view-state id="payment" view="payment" model="orders">
+    	<on-entry>
+    		<evaluate expression="flowHandler.myPayment(orders)" result="orders"></evaluate>
+    	</on-entry>
+    	<transition on="paySuccess" to="checkout"></transition>
+    </view-state>
+    
+    <view-state id="checkout" view="checkout" model="orders">
+    	<transition to="confirmOrder" on="checkoutSuccess"></transition>
+    </view-state>
+    
+    <action-state id="confirmOrder">
+    	<evaluate expression="flowHandler.saveOrder(orders)" ></evaluate>
+    	<transition to="success" on="success"></transition>
+    </action-state>
+    
+   <end-state id="success" view="home">
+   </end-state>
+    
+    
+</flow>   
